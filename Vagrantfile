@@ -5,15 +5,15 @@
 
 Vagrant.configure("2") do |config|
 
-  # create mgmt node
-  config.vm.define :mgmt do |mgmt_config|
-      mgmt_config.vm.box = "ubuntu/trusty64"
-      mgmt_config.vm.hostname = "mgmt"
-      mgmt_config.vm.network :private_network, ip: "10.0.15.10"
-      mgmt_config.vm.provider "virtualbox" do |vb|
+  # create workstation node
+  config.vm.define :workstation do |workstation_config|
+      workstation_config.vm.box = "ubuntu/trusty64"
+      workstation_config.vm.hostname = "workstation"
+      workstation_config.vm.network :private_network, ip: "10.0.15.10"
+      workstation_config.vm.provider "virtualbox" do |vb|
         vb.memory = "256"
       end
-      mgmt_config.vm.provision :shell, path: "bootstrap-mgmt.sh"
+      workstation_config.vm.provision :shell, path: "bootstrap-workstation.sh"
   end
 
   # create load balancer
@@ -29,7 +29,7 @@ Vagrant.configure("2") do |config|
 
   # create some web servers
   # https://docs.vagrantup.com/v2/vagrantfile/tips.html
-  (1..2).each do |i|
+  (1..4).each do |i|
     config.vm.define "web#{i}" do |node|
         node.vm.box = "ubuntu/trusty64"
         node.vm.hostname = "web#{i}"

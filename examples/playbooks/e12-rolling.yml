@@ -2,7 +2,7 @@
 
 # common
 - hosts: all
-  sudo: yes
+  become: yes
   gather_facts: no
 
   tasks:
@@ -12,18 +12,18 @@
 
 # web
 - hosts: web
-  sudo: yes
+  become: yes
   vars:
-    # https://github.com/jweissig/episode-47/releases
-    app_version: release-0.01
+    # https://github.com/syreddy001/sample-ansible-app
+    app_version: release-1.0.0
   serial: 1
 
   pre_tasks:
 
   - name: disable server in haproxy
-    shell: echo "disable server episode46/{{ inventory_hostname }}" | socat stdio /var/lib/haproxy/stats
+    shell: echo "disable server ansibledemo/{{ inventory_hostname }}" | socat stdio /var/lib/haproxy/stats
     delegate_to: "{{ item }}"
-    with_items: groups.lb
+    loop: "{{groups['clb']}}" 
 
   tasks:
 
@@ -43,7 +43,7 @@
     file: path=/usr/share/nginx/html/ state=absent
 
   - name: deploy website content
-    git: repo=https://github.com/jweissig/episode-47.git
+    git: repo=https://github.com/syreddy001/sample-ansible-app.git
          dest=/usr/share/nginx/html/
          version={{ app_version }}
 
@@ -55,13 +55,13 @@
   post_tasks:
 
   - name: enable server in haproxy
-    shell: echo "enable server episode46/{{ inventory_hostname }}" | socat stdio /var/lib/haproxy/stats
+    shell: echo "enable server ansibledemo/{{ inventory_hostname }}" | socat stdio /var/lib/haproxy/stats
     delegate_to: "{{ item }}"
-    with_items: groups.lb
-
+    loop: "{{groups['clb']}}" 
+    
 # lb
-- hosts: lb
-  sudo: yes  
+- hosts: clb
+  become: yes  
 
   tasks:
 
