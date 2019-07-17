@@ -20,15 +20,15 @@
     apt: name=nginx state=present
 
   - name: write our nginx.conf
-    template: src=templates/nginx.conf.j2 dest=/etc/nginx/nginx.conf
+    template: src=../templates/nginx.conf.j2 dest=/etc/nginx/nginx.conf
     notify: restart nginx
 
   - name: write our /etc/nginx/sites-available/default
-    template: src=templates/default-site.j2 dest=/etc/nginx/sites-available/default
+    template: src=../templates/default-site.j2 dest=/etc/nginx/sites-available/default
     notify: restart nginx
 
   - name: deploy website content
-    template: src=templates/index.html.j2 dest=/usr/share/nginx/html/index.html
+    template: src=../templates/index.html.j2 dest=/usr/share/nginx/html/index.html
 
   handlers:
 
@@ -53,7 +53,7 @@
     notify: restart haproxy 
 
   - name: deploy haproxy config
-    template: src=templates/haproxy.cfg.j2 dest=/etc/haproxy/haproxy.cfg
+    template: src=../templates/haproxy.cfg.j2 dest=/etc/haproxy/haproxy.cfg
     notify: restart haproxy
 
   handlers:
