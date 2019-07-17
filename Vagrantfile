@@ -9,6 +9,7 @@ Vagrant.configure("2") do |config|
   config.vm.define :workstation do |workstation_config|
       workstation_config.vm.box = "ubuntu/trusty64"
       workstation_config.vm.hostname = "workstation"
+      workstation_config.vm.synced_folder ".","/home/vagrant"
       workstation_config.vm.network :private_network, ip: "10.0.15.10"
       workstation_config.vm.provider "virtualbox" do |vb|
         vb.memory = "256"
